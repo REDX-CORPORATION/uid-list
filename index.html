@@ -1,26 +1,147 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Professional UID Marketplace</title>
-<link rel="stylesheet" href="style.css">
+<style>
+/* === General Styles === */
+body{
+    font-family:'Arial',sans-serif;
+    margin:0;
+    padding:0;
+    background:#0f172a;
+    color:white;
+}
+header{
+    background:#1e293b;
+    padding:20px;
+    text-align:center;
+}
+header img{
+    width:150px;
+    display:block;
+    margin:0 auto 10px auto;
+}
+header h1{
+    margin:5px 0;
+}
+header p{
+    font-size:14px;
+    color:#cbd5e1;
+    margin:0;
+}
+
+/* === Search === */
+#search-container{
+    display:flex;
+    justify-content:center;
+    margin:20px;
+}
+#search{
+    width:300px;
+    padding:10px;
+    border-radius:6px;
+    border:none;
+    font-size:16px;
+}
+
+/* === Table === */
+table{
+    width:95%;
+    margin:auto;
+    border-collapse:collapse;
+}
+th,td{
+    padding:12px;
+    border-bottom:1px solid #333;
+    text-align:center;
+}
+th{
+    background:#1e293b;
+}
+tr:hover{
+    background:#1f2937;
+}
+.copy{
+    color:#38bdf8;
+    cursor:pointer;
+}
+button.buy{
+    background:#38bdf8;
+    border:none;
+    padding:6px 12px;
+    border-radius:6px;
+    color:black;
+    cursor:pointer;
+}
+button.buy:hover{
+    background:#0ea5e9;
+}
+
+/* === Modal Styles === */
+.modal{
+    display:none;
+    position:fixed;
+    z-index:1000;
+    left:0; top:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.7);
+    justify-content:center;
+    align-items:center;
+}
+.modal-content{
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+    width:90%;
+    max-width:400px;
+    text-align:center;
+    position:relative;
+}
+.modal-content img.logo{
+    width:100px;
+    margin-bottom:10px;
+}
+.modal-content h2{
+    margin:10px 0;
+}
+.modal-content p{
+    font-size:14px;
+    line-height:1.5;
+    color:#cbd5e1;
+}
+.modal-content .contacts{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-top:15px;
+}
+.modal-content .contacts img{
+    width:40px;
+    cursor:pointer;
+}
+.close{
+    position:absolute;
+    top:10px;
+    right:15px;
+    font-size:20px;
+    font-weight:bold;
+    color:#cbd5e1;
+    cursor:pointer;
+}
+</style>
 </head>
 <body>
 
 <header>
-<h1>🔥 Professional UID Marketplace</h1>
-<div class="help">
-Search UIDs, copy them, and contact us for purchases via Discord / Telegram.<br>
-All UIDs can be bound to any region.
-</div>
+    <img src="https://i.imgur.com/2rT2a1Y.png" alt="Guns LOL Logo">
+    <h1>Professional UID Marketplace</h1>
+    <p>Search UIDs, copy, and click Buy to see instructions. All UIDs can be bound to any region.</p>
 </header>
 
-<div id="stats">
-<span id="totalUIDs">Total UIDs: 0</span> |
-<span id="topUID">Top UID: -</span>
-</div>
-
 <div id="search-container">
-<input type="text" id="search" placeholder="Search UID..." onkeyup="filterUIDs()">
+    <input type="text" id="search" placeholder="Search UID..." onkeyup="filterUIDs()">
 </div>
 
 <table id="uidTable">
@@ -35,85 +156,98 @@ All UIDs can be bound to any region.
 <tbody></tbody>
 </table>
 
-<script>
-let uidData=[];
-let filteredData=[];
+<!-- Modal -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="logo" src="https://i.imgur.com/2rT2a1Y.png" alt="Guns LOL">
+        <h2 id="modalUID">UID: -</h2>
+        <p id="modalInfo">
+            Score: -<br>
+            You give me your Gmail, I will bind the account to you.<br>
+            I will guide you how to bind via Discord.<br>
+            UIDs can be bound to any region.
+        </p>
+        <div class="contacts">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Discord_logo.svg" alt="Discord" title="Contact Discord" onclick="contact('discord')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" title="Contact Telegram" onclick="contact('telegram')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram" title="Contact Instagram" onclick="contact('instagram')">
+        </div>
+    </div>
+</div>
 
-// Fetch uid.json automatically
+<script>
+// === Fetch UID JSON ===
+let uidData = [];
 fetch("uid.json")
 .then(res=>res.json())
 .then(data=>{
     uidData = data;
-    filteredData = uidData;
-    updateStats();
-    displayUIDs(filteredData);
+    displayUIDs(uidData);
 })
-.catch(err=>{
-    alert("Error fetching uid.json: "+err);
-});
+.catch(err=>alert("Error fetching uid.json: "+err));
 
-// Update UID stats
-function updateStats(){
-    document.getElementById("totalUIDs").textContent = "Total UIDs: "+uidData.length;
-    if(uidData.length>0){
-        const top = uidData.reduce((a,b)=> b.score>a.score?b:a);
-        document.getElementById("topUID").textContent = `Top UID: ${top.uid} (Score: ${top.score})`;
-    }
-}
-
-// Display UID table
+// === Display table ===
 function displayUIDs(data){
     const tbody = document.querySelector("#uidTable tbody");
     tbody.innerHTML="";
     const fragment = document.createDocumentFragment();
     data.forEach(d=>{
         const tr = document.createElement("tr");
-
-        // Rank, UID, Score columns
         tr.innerHTML = `
             <td>${d.rank}</td>
             <td class="copy">${d.uid}</td>
             <td>${d.score}</td>
-            <td>
-                <button class="buy" onclick="contact('${d.uid}')">Buy</button>
-            </td>
+            <td><button class="buy" onclick="openModal(${d.rank})">Buy</button></td>
         `;
-
         // Click UID to copy
         tr.querySelector(".copy").onclick = ()=>copyUID(d.uid);
-
         fragment.appendChild(tr);
     });
     tbody.appendChild(fragment);
 }
 
-// Search/filter
+// === Search ===
 function filterUIDs(){
     const input = document.getElementById("search").value.trim();
-    if(!input){
-        displayUIDs(uidData);
-        return;
-    }
     const filtered = uidData.filter(x=> x.uid.includes(input));
     displayUIDs(filtered);
 }
 
-// Copy UID
+// === Copy UID ===
 function copyUID(uid){
     navigator.clipboard.writeText(uid);
     alert("UID Copied: "+uid);
 }
 
-// Contact / Buy button
-function contact(uid){
-    const msg = `Interested in UID ${uid}. Contact us via Discord or Telegram!`;
-    const discord = "https://discord.gg/yourserver";
-    const telegram = "https://t.me/yourchannel";
-    alert(msg);
-    // Open links
-    window.open(discord, "_blank");
-    window.open(telegram, "_blank");
+// === Modal logic ===
+const modal = document.getElementById("modal");
+const modalUID = document.getElementById("modalUID");
+const modalInfo = document.getElementById("modalInfo");
+
+function openModal(rank){
+    const uid = uidData.find(x=>x.rank===rank);
+    modalUID.textContent = `UID: ${uid.uid}`;
+    modalInfo.innerHTML = `
+        Score: ${uid.score}<br>
+        You give me your Gmail, I will bind the account to you.<br>
+        I will guide you how to bind via Discord.<br>
+        UIDs can be bound to any region.
+    `;
+    modal.style.display="flex";
+}
+function closeModal(){ modal.style.display="none"; }
+window.onclick = e => { if(e.target===modal) closeModal(); }
+
+// === Contact buttons ===
+function contact(platform){
+    let url="";
+    if(platform==="discord") url="https://discord.gg/YOURSERVER";
+    else if(platform==="telegram") url="https://t.me/YOURCHANNEL";
+    else if(platform==="instagram") url="https://instagram.com/YOURACCOUNT";
+    window.open(url,"_blank");
 }
 </script>
+
 </body>
 </html>
