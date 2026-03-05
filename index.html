@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>UID Marketplace</title>
+<title>Professional UID Marketplace</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>🔥 UID Marketplace</h1>
+<header>
+<h1>🔥 Professional UID Marketplace</h1>
+<div class="help">
+Search UIDs, copy them, and contact us for purchases via Discord / Telegram.<br>
+All UIDs can be bound to any region.
+</div>
+</header>
 
-<input type="text" id="search" placeholder="Search UID..." onkeyup="searchUID()">
+<div id="stats">
+<span id="totalUIDs">Total UIDs: 0</span> |
+<span id="topUID">Top UID: -</span>
+</div>
+
+<div id="search-container">
+<input type="text" id="search" placeholder="Search UID..." onkeyup="filterUIDs()">
+</div>
 
 <table id="uidTable">
 <thead>
@@ -16,6 +29,7 @@
 <th>#</th>
 <th>UID</th>
 <th>Score</th>
+<th>Buy</th>
 </tr>
 </thead>
 <tbody></tbody>
@@ -23,50 +37,82 @@
 
 <script>
 let uidData=[];
+let filteredData=[];
 
 // Fetch uid.json automatically
 fetch("uid.json")
-.then(res=>{
-    if(!res.ok) throw new Error("Cannot fetch uid.json. Make sure it is in the same folder!");
-    return res.json();
-})
+.then(res=>res.json())
 .then(data=>{
     uidData = data;
-    display(uidData);
+    filteredData = uidData;
+    updateStats();
+    displayUIDs(filteredData);
 })
 .catch(err=>{
-    alert(err);
+    alert("Error fetching uid.json: "+err);
 });
 
-// Display UIDs efficiently
-function display(data){
+// Update UID stats
+function updateStats(){
+    document.getElementById("totalUIDs").textContent = "Total UIDs: "+uidData.length;
+    if(uidData.length>0){
+        const top = uidData.reduce((a,b)=> b.score>a.score?b:a);
+        document.getElementById("topUID").textContent = `Top UID: ${top.uid} (Score: ${top.score})`;
+    }
+}
+
+// Display UID table
+function displayUIDs(data){
     const tbody = document.querySelector("#uidTable tbody");
     tbody.innerHTML="";
     const fragment = document.createDocumentFragment();
     data.forEach(d=>{
         const tr = document.createElement("tr");
-        tr.onclick = ()=>copyUID(d.uid);
-        tr.innerHTML = `<td>${d.rank}</td><td class="copy">${d.uid}</td><td>${d.score}</td>`;
+
+        // Rank, UID, Score columns
+        tr.innerHTML = `
+            <td>${d.rank}</td>
+            <td class="copy">${d.uid}</td>
+            <td>${d.score}</td>
+            <td>
+                <button class="buy" onclick="contact('${d.uid}')">Buy</button>
+            </td>
+        `;
+
+        // Click UID to copy
+        tr.querySelector(".copy").onclick = ()=>copyUID(d.uid);
+
         fragment.appendChild(tr);
     });
     tbody.appendChild(fragment);
 }
 
-// Search filter
-function searchUID(){
+// Search/filter
+function filterUIDs(){
     const input = document.getElementById("search").value.trim();
     if(!input){
-        display(uidData);
+        displayUIDs(uidData);
         return;
     }
-    const filtered = uidData.filter(x=> x.uid.includes(input) );
-    display(filtered);
+    const filtered = uidData.filter(x=> x.uid.includes(input));
+    displayUIDs(filtered);
 }
 
 // Copy UID
 function copyUID(uid){
     navigator.clipboard.writeText(uid);
     alert("UID Copied: "+uid);
+}
+
+// Contact / Buy button
+function contact(uid){
+    const msg = `Interested in UID ${uid}. Contact us via Discord or Telegram!`;
+    const discord = "https://discord.gg/yourserver";
+    const telegram = "https://t.me/yourchannel";
+    alert(msg);
+    // Open links
+    window.open(discord, "_blank");
+    window.open(telegram, "_blank");
 }
 </script>
 </body>
