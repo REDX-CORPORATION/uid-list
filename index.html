@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>UID Marketplace</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🔥 UID Marketplace</h1>
+
+<input type="text" id="search" placeholder="Search UID..." onkeyup="searchUID()">
+
+<table id="uidTable">
+<thead>
+<tr>
+<th>#</th>
+<th>UID</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<script>
+let uidData=[];
+
+// Fetch uid.json automatically
+fetch("uid.json")
+.then(res=>{
+    if(!res.ok) throw new Error("Cannot fetch uid.json. Make sure it is in the same folder!");
+    return res.json();
+})
+.then(data=>{
+    uidData = data;
+    display(uidData);
+})
+.catch(err=>{
+    alert(err);
+});
+
+// Display UIDs efficiently
+function display(data){
+    const tbody = document.querySelector("#uidTable tbody");
+    tbody.innerHTML="";
+    const fragment = document.createDocumentFragment();
+    data.forEach(d=>{
+        const tr = document.createElement("tr");
+        tr.onclick = ()=>copyUID(d.uid);
+        tr.innerHTML = `<td>${d.rank}</td><td class="copy">${d.uid}</td><td>${d.score}</td>`;
+        fragment.appendChild(tr);
+    });
+    tbody.appendChild(fragment);
+}
+
+// Search filter
+function searchUID(){
+    const input = document.getElementById("search").value.trim();
+    if(!input){
+        display(uidData);
+        return;
+    }
+    const filtered = uidData.filter(x=> x.uid.includes(input) );
+    display(filtered);
+}
+
+// Copy UID
+function copyUID(uid){
+    navigator.clipboard.writeText(uid);
+    alert("UID Copied: "+uid);
+}
+</script>
+</body>
+</html>
