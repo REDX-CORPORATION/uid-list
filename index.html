@@ -3,24 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>nexus · uid cards (large dataset)</title>
-  <!-- Font Awesome 6 (brand icons) -->
+  <title>nexus · UID marketplace</title>
+  <!-- Font Awesome 6 (free) for clean icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
     body {
-      background: #f5f8ff;
+      background: #0b121f;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #e2e8f0;
+      line-height: 1.5;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem 1.5rem;
-      min-height: 100vh;
     }
 
     .container {
@@ -28,227 +30,310 @@
       width: 100%;
     }
 
-    /* header / stats */
-    .header-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
+    /* ----- ENTRY CARD (intro) ----- */
+    .intro-card {
+      background: rgba(18, 28, 46, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid #2d3b52;
+      border-radius: 2rem;
+      padding: 2rem 2.2rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 20px 35px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(71, 125, 200, 0.2);
+      transition: box-shadow 0.2s;
     }
 
-    h1 {
-      font-weight: 500;
-      font-size: 2.4rem;
-      letter-spacing: -0.02em;
-      background: linear-gradient(145deg, #1f3147, #2e405b);
+    .intro-card:hover {
+      box-shadow: 0 25px 40px -18px #1e4b7c, 0 0 0 1px #3b6a9e;
+    }
+
+    .intro-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .intro-header i {
+      font-size: 2.5rem;
+      color: #60a5fa;
+      filter: drop-shadow(0 0 8px #2563eb80);
+    }
+
+    .intro-header h1 {
+      font-weight: 600;
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, #f0f9ff, #b0d4ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
+      letter-spacing: -0.02em;
     }
 
-    .help-tag {
-      background: #e9f0fa;
-      padding: 0.6rem 1.8rem;
-      border-radius: 40px;
-      color: #2a3f5a;
-      border: 1px solid white;
-      font-size: 0.95rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    .intro-description {
+      font-size: 1.1rem;
+      color: #b0c6e0;
+      margin-bottom: 1.5rem;
+      max-width: 700px;
     }
 
-    .stat-row {
-      margin: 1rem 0 2rem 0;
-      display: flex;
-      gap: 2.5rem;
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(8px);
-      padding: 0.6rem 2.2rem;
-      border-radius: 60px;
-      width: fit-content;
-      border: 1px solid #eef4fd;
-      font-size: 0.98rem;
-      color: #1a2d44;
-      box-shadow: 0 8px 18px -10px #1f3f6030;
-    }
-
-    .stat-row span {
-      font-weight: 520;
-    }
-
-    /* search + pagination controls */
-    .search-panel {
+    .intro-stats {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 2.2rem;
+      gap: 2rem;
+      background: #0f1a2b;
+      border-radius: 3rem;
+      padding: 0.8rem 2rem;
+      width: fit-content;
+      border: 1px solid #2b3f5c;
+      font-weight: 500;
+    }
+
+    .intro-stats span {
+      color: #cbd5e1;
+    }
+
+    .intro-stats span i {
+      margin-right: 0.5rem;
+      color: #3b82f6;
+    }
+
+    /* ----- SEARCH BAR ----- */
+    .search-wrapper {
+      margin: 2rem 0 2rem;
+      display: flex;
+      justify-content: center;
     }
 
     #search {
-      flex: 1 1 300px;
-      padding: 1rem 1.8rem;
-      border: none;
-      background: white;
+      width: 100%;
+      max-width: 450px;
+      padding: 1.1rem 2rem;
+      background: #152032;
+      border: 1px solid #2f405e;
       border-radius: 60px;
       font-size: 1rem;
-      box-shadow: 0 8px 18px -10px #1e3f5f30;
-      border: 1px solid #dae3f0;
-      transition: 0.2s;
+      color: white;
+      transition: all 0.2s;
+      box-shadow: 0 8px 18px -12px #000000;
     }
 
     #search:focus {
       outline: none;
-      border-color: #7b99c2;
-      box-shadow: 0 10px 22px -12px #1f4980;
+      border-color: #3b82f6;
+      box-shadow: 0 10px 22px -12px #1e4b9e, 0 0 0 2px rgba(59,130,246,0.2);
     }
 
-    .pagination-controls {
+    #search::placeholder {
+      color: #6f88a8;
+    }
+
+    /* filter chips */
+    .filter-chips {
       display: flex;
-      align-items: center;
       gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
 
-    .page-btn {
-      background: white;
-      border: 1px solid #cad8ea;
-      color: #1d3855;
-      font-weight: 550;
-      padding: 0.6rem 1.4rem;
+    .chip {
+      background: #1a273b;
+      border: 1px solid #314769;
+      color: #bfd3f0;
+      padding: 0.5rem 1.5rem;
       border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 500;
       cursor: pointer;
       transition: 0.15s;
-      font-size: 0.95rem;
-      box-shadow: 0 4px 8px -6px #142b44;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .page-btn:disabled {
-      opacity: 0.3;
-      pointer-events: none;
-      border-color: #d7e1ee;
+    .chip:hover {
+      background: #253b59;
+      border-color: #4e7bbf;
     }
 
-    .page-btn:hover:not(:disabled) {
-      background: #1f3857;
-      border-color: #1f3857;
+    .chip.active {
+      background: #1e4a7c;
+      border-color: #6d9eff;
       color: white;
-      box-shadow: 0 10px 18px -12px #10263c;
     }
 
-    #pageInfo {
+    .chip i {
+      font-size: 0.8rem;
+    }
+
+    /* ----- TABLE – clean, minimalist, with glow effects ----- */
+    .table-container {
+      background: #0f1827;
+      border-radius: 2rem;
+      padding: 0.1rem 0.2rem 0.2rem 0.2rem;
+      border: 1px solid #26334d;
+      overflow-x: auto;
+      box-shadow: 0 20px 40px -20px #000000;
+      transition: box-shadow 0.2s;
+    }
+
+    .table-container:hover {
+      box-shadow: 0 25px 45px -20px #1e3f70, 0 0 0 1px #3b6a9e40;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
       font-size: 0.95rem;
-      color: #2d4b70;
-      min-width: 130px;
+      min-width: 650px;
+    }
+
+    th {
+      text-align: center;
+      padding: 1.2rem 0.8rem;
+      background: #1a263b;
+      color: #bdd3ff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid #2f405e;
+    }
+
+    td {
+      padding: 1.2rem 0.8rem;
+      border-bottom: 1px solid #1f2d42;
       text-align: center;
     }
 
-    /* card grid */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-      gap: 1.8rem;
-      margin: 2rem 0 2rem;
-      min-height: 400px;
+    tr {
+      transition: background 0.15s, box-shadow 0.15s;
     }
 
-    /* card design */
-    .uid-card {
-      background: rgba(255,255,255,0.9);
-      backdrop-filter: blur(8px);
-      border-radius: 32px;
-      padding: 1.8rem 1.5rem 1.5rem 1.5rem;
-      border: 1px solid #ecf3fe;
-      box-shadow: 0 15px 30px -16px #1a355030;
-      transition: all 0.25s ease;
-      display: flex;
-      flex-direction: column;
+    tbody tr:hover {
+      background: #1b253b;
+      box-shadow: 0 0 0 1px #3b5f8f, 0 0 15px #1f4880;
+      cursor: default;
     }
 
-    .uid-card:hover {
-      transform: translateY(-6px);
-      border-color: #b8d1f5;
-      box-shadow: 0 25px 38px -18px #2d66aa60, 0 0 0 1px #a2c2f0, 0 0 22px #aac4f570;
+    /* sold row styling */
+    tr.sold-row {
+      opacity: 0.7;
     }
 
-    .card-rank {
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: #6d84a4;
-      letter-spacing: 0.03em;
-      margin-bottom: 1rem;
-    }
-
-    .uid-display {
-      font-size: 2rem;
-      font-weight: 500;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      color: #10243c;
-      line-height: 1.2;
-      margin: 0.2rem 0 0.5rem 0;
-      cursor: pointer;
-      width: fit-content;
-      border-bottom: 2px dotted transparent;
-      transition: 0.15s;
-      word-break: break-word;
-    }
-
-    .uid-display:hover {
-      color: #1f5c9e;
-      border-bottom: 2px dotted #1f5c9e;
-    }
-
-    .score-line {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-size: 1.2rem;
-      font-weight: 400;
-      color: #2d4668;
-      margin: 0.5rem 0 1.8rem 0;
-    }
-
-    .score-line::before {
-      content: "✦";
-      font-size: 1.1rem;
-      color: #b8860b;
+    tr.sold-row:hover {
       opacity: 0.9;
     }
 
-    .buy-action {
+    .uid-cell {
+      color: #90caf9;
+      font-weight: 500;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: 0.15s;
+      border-bottom: 2px dotted transparent;
+    }
+
+    .uid-cell:hover {
+      color: #bbd7fb;
+      border-bottom: 2px dotted #3b82f6;
+    }
+
+    .uid-cell i {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    /* buy button */
+    .buy-btn {
       background: transparent;
-      border: 1.8px solid #1f334e;
-      color: #1f334e;
-      font-weight: 560;
-      padding: 0.8rem 1rem;
-      border-radius: 50px;
-      font-size: 1rem;
+      border: 1.5px solid #3b6a9e;
+      color: #bfdaff;
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 550;
       cursor: pointer;
       transition: 0.2s;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      margin-top: auto;
+      gap: 0.5rem;
     }
 
-    .buy-action i {
-      font-size: 1rem;
-    }
-
-    .buy-action:hover {
-      background: #102a41;
-      border-color: #102a41;
+    .buy-btn:hover {
+      background: #1e4a7c;
+      border-color: #5f9eff;
       color: white;
-      box-shadow: 0 8px 18px -10px #102a41cc;
+      box-shadow: 0 6px 14px -6px #1e4b9e, 0 0 0 1px #6ea5ff;
     }
 
-    /* modal overlay */
+    .buy-btn.sold {
+      background: #2a3346;
+      border-color: #5c6f8c;
+      color: #8f9fb5;
+      cursor: not-allowed;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .buy-btn i {
+      font-size: 0.9rem;
+    }
+
+    /* sold badge */
+    .sold-badge {
+      background: #4a1e2c;
+      color: #ffb3b3;
+      border: 1px solid #b33f4f;
+      border-radius: 20px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-left: 0.5rem;
+      display: inline-block;
+    }
+
+    .score-cell {
+      font-weight: 500;
+      color: #fcd34d;
+      text-shadow: 0 0 6px #fbbf2440;
+    }
+
+    .rank-cell {
+      color: #9aaec9;
+    }
+
+    /* status indicator */
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .status-available {
+      background: #22c55e;
+      box-shadow: 0 0 10px #22c55e;
+    }
+
+    .status-sold {
+      background: #ef4444;
+      box-shadow: 0 0 10px #ef4444;
+    }
+
+    /* ----- MODAL CARD (opens on buy) ----- */
     .modal {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 20, 40, 0.3);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 7, 20, 0.7);
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -264,13 +349,13 @@
     }
 
     .modal-card {
-      background: #fffffffa;
-      border-radius: 48px;
-      max-width: 480px;
+      background: #121f33;
+      border-radius: 2.5rem;
+      max-width: 460px;
       width: 90%;
-      padding: 2.4rem 2rem 2rem 2rem;
-      box-shadow: 0 50px 80px -28px #0f2640, 0 0 0 1px #ffffff, 0 0 48px #9bb9e8;
-      border: 1px solid white;
+      padding: 2.2rem 2rem 2rem;
+      border: 1px solid #3f618c;
+      box-shadow: 0 40px 70px -20px #030613, 0 0 0 1px #7199d0, 0 0 40px #0e3460;
       transform: scale(0.96);
       transition: transform 0.25s;
     }
@@ -280,177 +365,197 @@
     }
 
     .modal-card h2 {
-      font-weight: 500;
-      font-size: 2.3rem;
+      font-weight: 600;
+      font-size: 2rem;
+      color: #e0edff;
       letter-spacing: -0.02em;
-      color: #0a233c;
+      margin-bottom: 0.3rem;
     }
 
     .modal-uid-badge {
-      background: #e5efff;
-      border-radius: 60px;
-      padding: 0.5rem 1.6rem;
+      background: #1f314b;
+      border-radius: 40px;
+      padding: 0.5rem 1.5rem;
       font-family: monospace;
-      font-size: 1.9rem;
+      font-size: 1.8rem;
       font-weight: 500;
       display: inline-block;
-      margin: 1rem 0 1.8rem 0;
-      color: #103868;
-      border: 1px solid #c5d8fc;
+      margin: 0.8rem 0 1.5rem 0;
+      border: 1px solid #456f9e;
+      color: #c5ddff;
     }
 
-    .instruction-box {
-      background: #f0f7ff;
-      border-radius: 30px;
+    .modal-info {
+      background: #17273f;
+      border-radius: 2rem;
       padding: 1.8rem;
-      margin: 1.2rem 0 2rem 0;
-      border: 1px solid #d6e6ff;
-    }
-
-    .instruction-box p {
-      margin-bottom: 1.2rem;
-      color: #183653;
+      margin: 1rem 0 2rem 0;
+      border: 1px solid #355982;
       font-size: 1rem;
-      line-height: 1.5;
-      display: flex;
-      gap: 0.9rem;
+      line-height: 1.6;
+      color: #c9dcf5;
     }
 
-    .instruction-box i {
-      color: #2f5b8c;
-      width: 1.8rem;
-      font-size: 1.3rem;
+    .modal-info i {
+      color: #5f9cff;
+      width: 2rem;
     }
 
-    .contact-icons {
+    .contact-row {
       display: flex;
-      gap: 2.8rem;
       justify-content: center;
-      margin: 2rem 0 0.8rem;
+      gap: 2.8rem;
+      margin: 1.8rem 0 0.8rem;
     }
 
-    .contact-icons a {
-      font-size: 2.8rem;
-      color: #1f3f68;
+    .contact-icon {
+      font-size: 2.6rem;
+      color: #b7d0f5;
       transition: 0.2s;
     }
 
-    .contact-icons a:hover {
-      color: #0077b5;
+    .contact-icon:hover {
+      color: white;
       transform: scale(1.1);
-      filter: drop-shadow(0 8px 14px #1f3f6840);
+      filter: drop-shadow(0 0 10px #1e8aff);
     }
 
     .close-btn {
-      background: none;
-      border: none;
-      font-size: 2rem;
       position: absolute;
       top: 1.2rem;
       right: 1.5rem;
+      background: none;
+      border: none;
+      font-size: 2.2rem;
+      color: #7f9bc0;
       cursor: pointer;
-      color: #6c87aa;
+      transition: 0.15s;
     }
 
     .close-btn:hover {
-      color: #122b44;
+      color: white;
     }
 
     .footer-note {
-      color: #5f789b;
-      border-top: 1px solid #d0dff2;
-      padding-top: 2rem;
+      margin-top: 3rem;
       text-align: center;
-      margin-top: 2rem;
+      color: #5e779b;
+      border-top: 1px solid #25344f;
+      padding-top: 2rem;
     }
 
-    .loading {
-      text-align: center;
-      padding: 3rem;
-      color: #3f608b;
-      font-size: 1.2rem;
+    /* responsive */
+    @media (max-width: 600px) {
+      .intro-header h1 { font-size: 1.8rem; }
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <div class="header-row">
-    <h1>⚡ UID collection</h1>
-    <div class="help-tag"><i class="fa-regular fa-clipboard"></i> tap UID to copy · region‑free</div>
-  </div>
-
-  <div class="stat-row">
-    <span id="totalUIDs">Total UIDs: 0</span>
-    <span>|</span>
-    <span id="topUID">Top UID: —</span>
-  </div>
-
-  <!-- search + pagination -->
-  <div class="search-panel">
-    <input type="text" id="search" placeholder="🔍 search by UID (e.g. 14361807295)" autocomplete="off">
-    <div class="pagination-controls">
-      <button class="page-btn" id="prevPage" disabled>← Prev</button>
-      <span id="pageInfo">Page 1 / 1</span>
-      <button class="page-btn" id="nextPage" disabled>Next →</button>
+  <!-- ENTRY CARD (introduction) -->
+  <div class="intro-card">
+    <div class="intro-header">
+      <i class="fa-regular fa-gem"></i>
+      <h1>professional UID marketplace</h1>
+    </div>
+    <div class="intro-description">
+      ⚡ Search, copy, and buy UIDs. All UIDs can be bound to any region.
+      Click on any UID to copy, or press Buy to see binding instructions.
+    </div>
+    <div class="intro-stats">
+      <span><i class="fa-regular fa-rectangle-list"></i> <span id="totalUIDs">0</span> total</span>
+      <span><i class="fa-regular fa-circle-check"></i> <span id="availableUIDs">0</span> available</span>
+      <span><i class="fa-regular fa-circle-xmark"></i> <span id="soldUIDs">0</span> sold</span>
+      <span><i class="fa-regular fa-star"></i> Top <span id="topUID">-</span></span>
     </div>
   </div>
 
-  <!-- card grid (rendered dynamically) -->
-  <div id="cardGrid" class="card-grid"></div>
+  <!-- search bar -->
+  <div class="search-wrapper">
+    <input type="text" id="search" placeholder="🔍 search by UID (e.g. 14361807295)">
+  </div>
 
-  <!-- buy modal -->
+  <!-- filter chips -->
+  <div class="filter-chips">
+    <div class="chip active" id="filterAll" onclick="setFilter('all')">
+      <i class="fa-regular fa-list"></i> All
+    </div>
+    <div class="chip" id="filterAvailable" onclick="setFilter('available')">
+      <i class="fa-regular fa-circle-check"></i> Available
+    </div>
+    <div class="chip" id="filterSold" onclick="setFilter('sold')">
+      <i class="fa-regular fa-circle-xmark"></i> Sold
+    </div>
+  </div>
+
+  <!-- table container -->
+  <div class="table-container">
+    <table id="uidTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Status</th>
+          <th>UID <i class="fa-regular fa-clipboard" style="margin-left:5px;"></i></th>
+          <th>Score</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- filled from JSON -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODAL (buy card) -->
   <div class="modal" id="buyModal">
     <div class="modal-card">
       <button class="close-btn" id="closeModal"><i class="fa-solid fa-xmark"></i></button>
       <h2>acquire UID</h2>
-      <div class="modal-uid-badge" id="modalUid">#00000000</div>
-
-      <div class="instruction-box">
-        <p><i class="fa-regular fa-message"></i> <span><strong>how to buy</strong> — knock me on Discord, Telegram or Instagram.</span></p>
-        <p><i class="fa-regular fa-circle-info"></i> <span><strong>info</strong> — UID can be bound to any region. Either give me your email and I’ll bind, or I’ll help you in Discord to bind yourself.</span></p>
+      <div class="modal-uid-badge" id="modalUid">#000000</div>
+      <div class="modal-info" id="modalInfo">
+        <!-- filled dynamically -->
       </div>
-
-      <div class="contact-icons">
-        <a href="#" target="_blank" title="Discord" id="discordLink"><i class="fa-brands fa-discord"></i></a>
-        <a href="#" target="_blank" title="Telegram" id="telegramLink"><i class="fa-brands fa-telegram"></i></a>
-        <a href="#" target="_blank" title="Instagram" id="instagramLink"><i class="fa-brands fa-instagram"></i></a>
+      <div class="contact-row">
+        <a href="#" target="_blank" class="contact-icon" id="discordLink"><i class="fa-brands fa-discord"></i></a>
+        <a href="#" target="_blank" class="contact-icon" id="telegramLink"><i class="fa-brands fa-telegram"></i></a>
+        <a href="#" target="_blank" class="contact-icon" id="instagramLink"><i class="fa-brands fa-instagram"></i></a>
       </div>
-      <p style="text-align: center; color:#3f5f8a; margin-top: 0.5rem; font-size:0.9rem;">direct chat — quick reply</p>
+      <p style="text-align:center; color:#8aa9d0; margin-top:0.3rem;">direct chat — quick reply</p>
     </div>
   </div>
 
   <div class="footer-note">
-    ✦ live inventory · all UIDs verified · showing 100 per page
+    ✦ live inventory · all UIDs verified · region‑free binding
   </div>
 </div>
 
 <script>
   (function() {
     // ------------------------------------------------------------------
-    // Large dataset handling: fetch uid.json, pagination, search
+    // data from uid.json with 'sold' field
     // ------------------------------------------------------------------
-    let allUIDs = [];                // full dataset
-    let filteredUIDs = [];           // after search
-    let currentPage = 1;
-    const pageSize = 100;            // cards per page (adjustable)
+    let uidData = [];
+    let currentFilter = 'all';
 
     // DOM elements
-    const gridEl = document.getElementById('cardGrid');
+    const tbody = document.getElementById('tableBody');
     const searchInput = document.getElementById('search');
     const totalSpan = document.getElementById('totalUIDs');
+    const availableSpan = document.getElementById('availableUIDs');
+    const soldSpan = document.getElementById('soldUIDs');
     const topSpan = document.getElementById('topUID');
-    const prevBtn = document.getElementById('prevPage');
-    const nextBtn = document.getElementById('nextPage');
-    const pageInfo = document.getElementById('pageInfo');
     const modal = document.getElementById('buyModal');
     const modalUidSpan = document.getElementById('modalUid');
+    const modalInfoDiv = document.getElementById('modalInfo');
     const closeModalBtn = document.getElementById('closeModal');
+    const filterAll = document.getElementById('filterAll');
+    const filterAvailable = document.getElementById('filterAvailable');
+    const filterSold = document.getElementById('filterSold');
+
+    // social links
     const discordLink = document.getElementById('discordLink');
     const telegramLink = document.getElementById('telegramLink');
     const instagramLink = document.getElementById('instagramLink');
-
-    // loading state
-    gridEl.innerHTML = '<div class="loading"><i class="fa-regular fa-hourglass-half"></i> loading UIDs from uid.json ...</div>';
 
     // close modal
     function closeModal() { modal.classList.remove('show'); }
@@ -458,128 +563,163 @@
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
     // copy uid
-    function copyUid(uid) {
-      navigator.clipboard.writeText(uid).then(() => alert(`✅ UID ${uid} copied`))
-        .catch(() => alert(`📋 copy manually: ${uid}`));
+    function copyUID(uid) {
+      navigator.clipboard.writeText(uid).then(() => {
+        alert(`✅ UID ${uid} copied`);
+      }).catch(() => {
+        alert(`📋 copy manually: ${uid}`);
+      });
     }
 
-    // show buy modal
-    function showBuyModal(uid) {
+    // show buy modal with details
+    function openModal(uid, score) {
       modalUidSpan.textContent = uid;
-      // replace with your actual invites
+      modalInfoDiv.innerHTML = `
+        <i class="fa-regular fa-star"></i> Score: ${score}<br>
+        <i class="fa-regular fa-envelope"></i> You give me your Gmail, I will bind the account to you.<br>
+        <i class="fa-regular fa-circle-question"></i> I will guide you how to bind via Discord.<br>
+        <i class="fa-regular fa-globe"></i> UIDs can be bound to any region.
+      `;
+      // set your actual invite links (replace with your discord/telegram/instagram)
       discordLink.href = 'https://discord.gg/yourserver';
       telegramLink.href = 'https://t.me/yourchannel';
       instagramLink.href = 'https://instagram.com/yourpage';
       modal.classList.add('show');
     }
 
-    // update stats (top UID by score)
+    // update stats
     function updateStats() {
-      totalSpan.textContent = `Total UIDs: ${allUIDs.length}`;
-      if (allUIDs.length > 0) {
-        const top = allUIDs.reduce((max, item) => item.score > max.score ? item : max, allUIDs[0]);
-        topSpan.textContent = `Top UID: ${top.uid} (${top.score})`;
+      totalSpan.textContent = uidData.length;
+      const available = uidData.filter(item => !item.sold).length;
+      const sold = uidData.filter(item => item.sold).length;
+      availableSpan.textContent = available;
+      soldSpan.textContent = sold;
+      
+      if (uidData.length > 0) {
+        const top = uidData.reduce((max, item) => item.score > max.score ? item : max, uidData[0]);
+        topSpan.textContent = `${top.uid} (${top.score})`;
       } else {
-        topSpan.textContent = 'Top UID: —';
+        topSpan.textContent = '-';
       }
     }
 
-    // render current page (filteredUIDs slice)
-    function renderPage() {
-      if (!gridEl) return;
-      const start = (currentPage - 1) * pageSize;
-      const end = start + pageSize;
-      const pageData = filteredUIDs.slice(start, end);
+    // set filter
+    window.setFilter = function(filter) {
+      currentFilter = filter;
+      
+      // update active chip
+      [filterAll, filterAvailable, filterSold].forEach(chip => chip.classList.remove('active'));
+      if (filter === 'all') filterAll.classList.add('active');
+      else if (filter === 'available') filterAvailable.classList.add('active');
+      else if (filter === 'sold') filterSold.classList.add('active');
+      
+      filterUIDs();
+    };
 
-      if (pageData.length === 0 && filteredUIDs.length > 0) {
-        // if page is empty (e.g., last page deleted by filter), go to last valid page
-        currentPage = Math.max(1, Math.ceil(filteredUIDs.length / pageSize));
-        renderPage();
+    // filter function
+    function filterUIDs() {
+      const query = searchInput.value.trim().toLowerCase();
+      let filtered = uidData;
+      
+      // apply status filter
+      if (currentFilter === 'available') {
+        filtered = filtered.filter(item => !item.sold);
+      } else if (currentFilter === 'sold') {
+        filtered = filtered.filter(item => item.sold);
+      }
+      
+      // apply search filter
+      if (query) {
+        filtered = filtered.filter(item => item.uid.toLowerCase().includes(query));
+      }
+      
+      renderTable(filtered);
+    }
+
+    // render table
+    function renderTable(data) {
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="padding:3rem;text-align:center;color:#7f9bc0;">✧ no UIDs match</td></tr>';
         return;
       }
 
-      // build cards
       const fragment = document.createDocumentFragment();
-      pageData.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'uid-card';
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        if (item.sold) tr.classList.add('sold-row');
 
-        const rankDiv = document.createElement('div');
-        rankDiv.className = 'card-rank';
-        rankDiv.textContent = `# ${item.rank}`;
+        // rank
+        const tdRank = document.createElement('td');
+        tdRank.className = 'rank-cell';
+        tdRank.textContent = item.rank;
 
+        // status
+        const tdStatus = document.createElement('td');
+        const statusSpan = document.createElement('span');
+        statusSpan.className = `status-indicator ${item.sold ? 'status-sold' : 'status-available'}`;
+        tdStatus.appendChild(statusSpan);
+        if (item.sold) {
+          const soldBadge = document.createElement('span');
+          soldBadge.className = 'sold-badge';
+          soldBadge.textContent = 'SOLD';
+          tdStatus.appendChild(soldBadge);
+        }
+
+        // uid (with copy)
+        const tdUid = document.createElement('td');
         const uidSpan = document.createElement('span');
-        uidSpan.className = 'uid-display';
-        uidSpan.textContent = item.uid;
-        uidSpan.addEventListener('click', (e) => { e.stopPropagation(); copyUid(item.uid); });
+        uidSpan.className = 'uid-cell';
+        uidSpan.innerHTML = `${item.uid} <i class="fa-regular fa-copy"></i>`;
+        uidSpan.addEventListener('click', (e) => {
+          e.stopPropagation();
+          copyUID(item.uid);
+        });
+        tdUid.appendChild(uidSpan);
 
-        const scoreDiv = document.createElement('div');
-        scoreDiv.className = 'score-line';
-        scoreDiv.textContent = item.score;
+        // score
+        const tdScore = document.createElement('td');
+        tdScore.className = 'score-cell';
+        tdScore.textContent = item.score;
 
+        // action button
+        const tdBuy = document.createElement('td');
         const buyBtn = document.createElement('button');
-        buyBtn.className = 'buy-action';
-        buyBtn.innerHTML = '<i class="fa-regular fa-hand-pointer"></i> Buy';
-        buyBtn.addEventListener('click', (e) => { e.stopPropagation(); showBuyModal(item.uid); });
+        buyBtn.className = `buy-btn ${item.sold ? 'sold' : ''}`;
+        buyBtn.innerHTML = item.sold ? 
+          '<i class="fa-regular fa-circle-xmark"></i> Sold' : 
+          '<i class="fa-regular fa-hand-pointer"></i> Buy';
+        
+        if (!item.sold) {
+          buyBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openModal(item.uid, item.score);
+          });
+        }
+        tdBuy.appendChild(buyBtn);
 
-        card.appendChild(rankDiv);
-        card.appendChild(uidSpan);
-        card.appendChild(scoreDiv);
-        card.appendChild(buyBtn);
-        fragment.appendChild(card);
+        tr.appendChild(tdRank);
+        tr.appendChild(tdStatus);
+        tr.appendChild(tdUid);
+        tr.appendChild(tdScore);
+        tr.appendChild(tdBuy);
+
+        fragment.appendChild(tr);
       });
 
-      gridEl.innerHTML = ''; // clear loading or old cards
-      if (pageData.length === 0) {
-        gridEl.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem; color:#4f6f94;">✧ no UIDs match</div>';
-      } else {
-        gridEl.appendChild(fragment);
-      }
-
-      // update pagination buttons & info
-      const totalPages = Math.max(1, Math.ceil(filteredUIDs.length / pageSize));
-      pageInfo.textContent = `Page ${currentPage} / ${totalPages}`;
-      prevBtn.disabled = currentPage === 1;
-      nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+      tbody.appendChild(fragment);
     }
 
-    // filter dataset and reset to page 1
-    function applyFilter() {
-      const query = searchInput.value.trim().toLowerCase();
-      if (!query) {
-        filteredUIDs = allUIDs.slice(); // full copy
-      } else {
-        filteredUIDs = allUIDs.filter(item => item.uid.toLowerCase().includes(query));
-      }
-      currentPage = 1;
-      renderPage();
-    }
-
-    // debounce search for performance
-    let searchTimeout;
+    // debounce search
+    let timeout;
     searchInput.addEventListener('keyup', () => {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(applyFilter, 200);
-    });
-
-    // pagination events
-    prevBtn.addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderPage();
-      }
-    });
-
-    nextBtn.addEventListener('click', () => {
-      const totalPages = Math.ceil(filteredUIDs.length / pageSize);
-      if (currentPage < totalPages) {
-        currentPage++;
-        renderPage();
-      }
+      clearTimeout(timeout);
+      timeout = setTimeout(filterUIDs, 200);
     });
 
     // ------------------------------------------------------------------
-    // FETCH uid.json (large file)
+    // FETCH uid.json (with sold field)
     // ------------------------------------------------------------------
     fetch('uid.json')
       .then(res => {
@@ -587,26 +727,23 @@
         return res.json();
       })
       .then(data => {
-        // data should be an array of {rank, uid, score}
-        if (!Array.isArray(data)) throw new Error('not an array');
-        allUIDs = data;
-        filteredUIDs = allUIDs.slice();
+        if (!Array.isArray(data)) throw new Error('invalid JSON');
+        uidData = data;
         updateStats();
-        renderPage();
+        renderTable(uidData);
       })
       .catch(err => {
-        console.error('fetch error, using fallback small set (replace with real uid.json)', err);
-        // fallback minimal data (so UI works)
-        allUIDs = [
-          { rank: 1, uid: "14555559999", score: 163 },
-          { rank: 6765, uid: "14361807295", score: 3 },
-          { rank: 6766, uid: "14362085976", score: 3 },
-          { rank: 6767, uid: "14570689123", score: 3 },
-          { rank: 6768, uid: "13976450832", score: 3 }
+        console.warn('fetch failed, using fallback with sold field', err);
+        // fallback with sold field example
+        uidData = [
+          { rank: 1, uid: "14555559999", score: 163, sold: false },
+          { rank: 6765, uid: "14361807295", score: 3, sold: true },
+          { rank: 6766, uid: "14362085976", score: 3, sold: false },
+          { rank: 6767, uid: "14570689123", score: 3, sold: true },
+          { rank: 6768, uid: "13976450832", score: 3, sold: false }
         ];
-        filteredUIDs = allUIDs.slice();
         updateStats();
-        renderPage();
+        renderTable(uidData);
       });
   })();
 </script>
